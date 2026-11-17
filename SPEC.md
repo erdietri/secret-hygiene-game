@@ -15,10 +15,13 @@ The player is a network automation engineer hardening an automation workflow in 
 
 ## Who this is for
 
-- **Learner:** [AUDIENCE AND EXPERIENCE].
-- **Assumed knowledge:** [WHAT THEY ALREADY KNOW; WRITE “NONE” IF APPROPRIATE].
-- **What the briefing teaches:** [TERMS AND METHOD NEEDED BEFORE THE FIRST DECISION].
-- **Why interaction helps:** [A SPECIFIC MISCONCEPTION THIS GAME MAKES VISIBLE].
+- **Learner:** Network automation engineers and "script kiddies" desiring a code security education
+- **Assumed knowledge:** networking, network automation/programmability
+- **What the briefing teaches:** **What the briefing teaches:** Three terms and one rule.
+- **Secret** — a credential that grants access and must stay unreadable to others: a device password, API token, SSH key, or SNMP community string.
+- **Leak surface** — a place a secret can end up where it shouldn't: git history, the process list / shell history, console & CI logs, stack traces, and uploaded build artifacts. These are the surfaces the Leak Report scans.
+- **Exposure** — the number of surfaces the secret is readable on after a run. The target is zero. The rule: for each decision, trace where the secret travels — where it's stored, what prints it, what gets committed or uploaded — because a pipeline can complete its task and still leak. A round is won only when the task works *and* exposure is zero.
+- **Why interaction helps:** it's not always obvious where secrets are leaked.
 - **Session target:** 5–10 minutes for a first playthrough, with unlimited thinking time.
 
 ## Learning outcomes and evidence
