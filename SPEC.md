@@ -5,13 +5,13 @@
 > if your mechanic needs something else. Resolve grading and scope questions
 > during **clarify**, before planning the implementation.
 
-# [GAME NAME] · First playable specification
+# Secret Hygiene Game · First playable specification
 
 ## The pitch
 
-**[ONE SENTENCE: PLAYER + ACTION + SKILL + VISIBLE CONSEQUENCE].**
+**Learn to harden a network automation workflow like a pro**
 
-The player is [ROLE] in [SETTING]. Each round shows [TECHNICAL EVIDENCE] and asks the player to [DECISION]. A correct decision [VISIBLE RESULT]; an incorrect decision [VISIBLE RESULT AND EXPLANATION]. The session ends when [CONCRETE COMPLETION CONDITION].
+The player is a network automation engineer hardening an automation workflow in a CI/CD job that pushes config to a network fleet. Each round shows a short pipeline assembled from a few decisions — where a credential comes from, how it's logged, what gets committed or uploaded — and asks the player to choose how the secret is handled at each hop. A correct decision returns a clean Leak Report: every surface (git history, process list, console, stack trace, build artifact) reads CLEAN and the lock turns green at zero exposure. An incorrect decision lights the leaked surfaces EXPOSED in red, showing the exact evidence — the password in a committed file, the token in a debug log line — and traces it back to the decision that caused it, so the fix is obvious on re-run. The session ends when the player clears all three levels with zero secrets exposed across every surface.
 
 ## Who this is for
 
