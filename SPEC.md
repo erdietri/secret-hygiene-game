@@ -26,21 +26,28 @@ The player is a network automation engineer hardening an automation workflow in 
 
 ## Learning outcomes and evidence
 
-Use observable verbs such as identify, calculate, order, compare, or diagnose. Replace the rows with your topic's skills.
+## Learning outcomes and evidence
 
 | ID | After playing, the learner can… | The game asks them to… | Evidence of success |
 | --- | --- | --- | --- |
-| LO1 | [FOUNDATIONAL SKILL] | [PLAYER ACTION] | [CHECKABLE RESULT] |
-| LO2 | [APPLY THE RULE TO COMPETING CHOICES] | [PLAYER ACTION] | [CHECKABLE RESULT] |
-| LO3 | [HANDLE AN EXCEPTION OR TRANSFER CASE] | [PLAYER ACTION] | [CHECKABLE RESULT] |
+| LO1 | Identify where a credential leaks based on how it is stored, passed, and logged | Choose the credential source and the log statement for a config-backup script | Leak Report shows 0 exposure — git history, process list, and console all CLEAN — with the task still completing |
+| LO2 | Compare competing config-handling choices and select the one that keeps a templated secret out of the repo and its logs | Choose the template value, what gets committed, and the render verbosity | Both git history and the CI render log read CLEAN (0 exposure); the placeholder-at-source path is reached |
+| LO3 | Diagnose an indirect leak — trace a secret that reaches a build artifact through the log and stack trace it inherits | Choose the API log level, the error-handling path, and what the job uploads | Console, stack trace, and build artifact all read CLEAN (0 exposure) across the failed-device run |
 
 ## The technical model
 
-- **Rule being taught:** [PRECISE RULE, INCLUDING ORDER/TIE-BREAKS IF THEY MATTER].
-- **Context:** [PROTOCOL VERSION, VENDOR, OR SIMPLIFIED MODEL].
-- **Assumptions:** [WHAT IS ALREADY TRUE WHEN A ROUND STARTS].
-- **Excluded behavior:** [WHAT A REAL NETWORK MIGHT DO THAT THIS GAME DOES NOT MODEL].
-- **Authoritative references:** [URL + SECTION + THE CLAIM IT SUPPORTS].
+- **Rule being taught:** A credential is *exposed* if its literal value is readable on any persisted or shared surface after the pipeline runs — source/VCS, process arguments & shell history, console/CI logs, stack traces, or build artifacts. A round is passed only when the task completes **and** exposure = 0. Tie-break / accept-rule: all surfaces must be clean simultaneously — there is no precedence or "least-bad" ranking among them, and a pipeline that completes its task but exposes the secret still fails. Where more than one decision set yields exposure = 0 (Level 2), the game accepts **any** zero-exposure path; it does not require a single canonical answer.
+- **Context:** Vendor-neutral, tool-agnostic simplified model. Idioms are drawn from common Python network-automation stacks — `os.environ` / git-ignored `.env` vaults, Jinja-style templating, a generic Git repo, a generic CI runner — but no specific product, vendor, or version is simulated.
+- **Assumptions:** When a round starts: the automation task itself always succeeds (only secret handling varies); a vault / git-ignored `.env` exists as the "safe source"; the repo is version-controlled and anything committed is readable by anyone with repo access; CI logs and uploaded artifacts are retained and readable by others; exactly one secret is in play; the player controls only the decisions shown — the rest of the pipeline is fixed.
+- **Excluded behavior:** The game does not model secret rotation, expiry, or revocation; access control nuance (private-repo ACLs, encryption-at-rest, short-lived or just-in-time credentials as mitigations); partial exposure (masking, last-4, hashing); secret-scanner detection, entropy, or false positives; alternatives to shared secrets (mTLS, cert-based auth); multi-secret or transitive/third-party leaks; and the blast radius of a leak once it happens. A surface either contains the literal secret or it does not.
+- **Authoritative references:**
+  - OWASP Secrets Management Cheat Sheet — keep secrets out of source, inject from a manager/vault → Level 1 source choice.
+  - The Twelve-Factor App, Factor III (Config) — store config/secrets in the environment → env/vault as the safe source.
+  - CWE-798 Use of Hard-coded Credentials (cwe.mitre.org/data/definitions/798.html) → hardcoded secret in source.
+  - CWE-214 Invocation of Process Using Visible Sensitive Information (…/214.html) → secret passed as a CLI arg, visible in the process list.
+  - CWE-532 Insertion of Sensitive Information into Log File (…/532.html) → secret in console/CI logs and uploaded log artifacts.
+  - CWE-209 Generation of Error Message Containing Sensitive Information (…/209.html) → token/connection string in a stack trace.
+  - CWE-540 Inclusion of Sensitive Information in Source Code (…/540.html) → secret baked into a committed rendered config.
 
 Tell the learner about these boundaries in plain language. If two answers can both be valid, define how the game accepts them or remove that ambiguity from the first version.
 
